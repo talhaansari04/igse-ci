@@ -75,10 +75,10 @@ jobs:
         run: rm -rf build/
 
       # Step 3: Cleanup - Remove temporary files or cache (optional)
-      - name: Cleanup - Remove temporary files
-        run: |
-          echo "Removing temporary files..."
-          rm -rf /tmp/*    # Example: remove temporary files
+#      - name: Cleanup - Remove temporary files
+#        run: |
+#          echo "Removing temporary files..."
+#          rm -rf /tmp/*    # Example: remove temporary files
 
       # Step 4: Optionally, stop the Spring Boot application if you ran it earlier
       - name: Cleanup - Stop Spring Boot app
