@@ -23,7 +23,7 @@ on:
 #        type: string
 
 jobs:
-  ci:
+  build:
     runs-on: ubuntu-latest
 
     steps:
@@ -55,6 +55,36 @@ jobs:
       # Step 4: Build and test the application
       - name: Build and test with Gradle
         run: ./gradlew build
+
+      - name: Upload test reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-reports
+          path: build/reports/tests
+  cleanup:
+    runs-on: ubuntu-latest
+    needs: build  # Ensure cleanup happens after the build job
+
+    steps:
+      # Step 1: Checkout code (needed to perform cleanup after build)
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Step 2: Cleanup - Delete build artifacts
+      - name: Cleanup - Delete build artifacts
+        run: rm -rf build/
+
+      # Step 3: Cleanup - Remove temporary files or cache (optional)
+      - name: Cleanup - Remove temporary files
+        run: |
+          echo "Removing temporary files..."
+          rm -rf /tmp/*    # Example: remove temporary files
+
+      # Step 4: Optionally, stop the Spring Boot application if you ran it earlier
+      - name: Cleanup - Stop Spring Boot app
+        run: pkill -f 'java -jar' || true  # Stop any running Java process
+        if: always()  # Ensures cleanup step runs even if previous steps fail
+
 
 #  docker:
 #    runs-on: ubuntu-latest
