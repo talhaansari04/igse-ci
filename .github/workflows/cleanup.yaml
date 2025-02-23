@@ -1,0 +1,18 @@
+name: igse-cleanup
+on:
+    workflow_run:
+        workflows: ["igse-ci"]
+        types:
+        - completed
+    workflow_dispatch:
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Cleanup - Delete build artifacts
+        run: rm -rf build/
+      - name: Cleanup - Stop Spring Boot app
+        run: pkill -f 'java -jar' || true  # Stop any running Java process
+        if: always()  # Ensures cleanup step runs even if previous steps fail
